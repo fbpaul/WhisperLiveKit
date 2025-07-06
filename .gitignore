@@ -134,7 +134,7 @@ run_*.sh
 *.pt 
 
 # Debug & testing
-test_*.py
+# test_*.py
 launch.json
 .DS_Store
 test/*
