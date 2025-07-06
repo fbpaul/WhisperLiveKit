@@ -1,0 +1,26 @@
+FROM python:3.10-slim
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+
+# 安裝系統套件
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ffmpeg \
+        git \
+        curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 複製原始碼（假設你用原始碼建構）
+COPY . .
+
+# 安裝 WhisperLiveKit（只裝基本功能）
+RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir . openai
+
+# 開放 API 埠
+EXPOSE 8000
+
+# 預設啟動命令：使用 openai-api 後端 + 中文語音
+ENTRYPOINT ["whisperlivekit-server", "--host", "0.0.0.0"]
+CMD ["--backend", "openai-api", "--lan", "zh", "--model", "whisper-1"]
